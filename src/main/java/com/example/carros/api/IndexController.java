@@ -12,14 +12,17 @@ public class IndexController {
     }
 
     /*
+    // Método de chamar na URLhttp://localhost:8080/login?login=leonardo&senha=leo123
     @GetMapping("/login")
     public String login(@RequestParam("login") String login, @RequestParam("senha") String senha) {
         return "Login: " + login + ", Senha: " + senha;
     }
-    @PostMapping("/login/{login}/senha/{senha}")
+    // Método de chamar na URL http://localhost:8080/login/leonardo/senha/leo123
+    @GetMapping("/login/{login}/senha/{senha}")
     public String login(@PathVariable("login") String login, @PathVariable("senha") String senha) {
         return "Login: " + login + ", Senha: " + senha;
-    }*/
+    }
+    */
 
     @PostMapping("/login")
     public String login(@RequestParam("login") String login, @RequestParam("senha") String senha) {
