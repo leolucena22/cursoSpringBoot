@@ -18,10 +18,10 @@ public class CarrosController {
         return service.getCarros();
     }
 
-    @GetMapping("/carrosFakes")
+/*  @GetMapping("/carrosFakes")
     public Iterable<Carro> getCarrosFakes() {
         return service.getCarrosFakes();
-    }
+    }*/
 
     @GetMapping("/{id}")
     public Optional<Carro> get(@PathVariable("id") Long id) {

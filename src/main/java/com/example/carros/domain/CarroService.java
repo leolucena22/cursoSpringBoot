@@ -70,6 +70,7 @@ public class CarroService {
         }
     }
 
+/*
     public List<Carro> getCarrosFakes() {
         List<Carro> carros = new ArrayList<>();
 
@@ -79,5 +80,6 @@ public class CarroService {
 
         return carros;
     }
+*/
 
 }
