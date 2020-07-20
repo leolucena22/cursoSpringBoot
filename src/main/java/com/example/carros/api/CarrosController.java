@@ -2,9 +2,11 @@ package com.example.carros.api;
 
 import com.example.carros.domain.Carro;
 import com.example.carros.domain.CarroService;
+import com.example.carros.domain.dto.CarroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -14,8 +16,8 @@ public class CarrosController {
     private CarroService service;
 
     @GetMapping()
-    public Iterable<Carro> get() {
-        return service.getCarros();
+    public ResponseEntity  get() {
+        return ResponseEntity.ok(service.getCarros());
     }
 
 /*  @GetMapping("/carrosFakes")
@@ -24,13 +26,34 @@ public class CarrosController {
     }*/
 
     @GetMapping("/{id}")
-    public Optional<Carro> get(@PathVariable("id") Long id) {
-        return service.getCarroById(id);
+    public ResponseEntity get(@PathVariable("id") Long id) {
+        Optional<CarroDTO> carro = service.getCarroById(id);
+
+        // Usando lambdas
+        return carro
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+
+        // Usando if ternário
+//        return carro.isPresent() ?
+//                ResponseEntity.ok(carro.get) :
+//                ResponseEntity.notFound().build();
+
+        // Usando if comum
+//        if (carro.isPresent()) {
+//            return ResponseEntity.ok(carro.get());
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
     }
 
     @GetMapping("/tipo/{tipo}")
-    public Iterable<Carro> getCarrosByTipo(@PathVariable("tipo") String tipo) {
-        return service.getCarrosByTipo(tipo);
+    public ResponseEntity getCarrosById(@PathVariable("tipo") String tipo) {
+        List<CarroDTO> carros = service.getCarrosByTipo(tipo);
+
+        return carros.isEmpty() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.ok(carros);
     }
 
     @PostMapping

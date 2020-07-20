@@ -1,12 +1,12 @@
 package com.example.carros.domain;
 
+import com.example.carros.domain.dto.CarroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarroService {
@@ -14,16 +14,35 @@ public class CarroService {
     @Autowired
     private CarroRepository rep;
 
-    public Iterable<Carro> getCarros() {
-        return rep.findAll();
+    public List<CarroDTO> getCarros() {
+        List<Carro> carros = rep.findAll();
+
+        // Usando Lambda
+                                       // c -> CarroDTO.create(c).collect(Collectors.toList());
+        return rep.findAll().stream().map(CarroDTO::create).collect(Collectors.toList());
+        // Usando for
+//        List<CarroDTO> list = new ArrayList<>();
+//        for (Carro c : carros) {
+//            list.add(new CarroDTO(c));
+//        }
+//        return list;
     }
 
-    public Optional<Carro> getCarroById(Long id) {
-        return rep.findById(id);
+    public Optional<CarroDTO> getCarroById(Long id) {
+        // Usando lambdas
+        return rep.findById(id).map(CarroDTO::create);
+
+        // Usando if
+//        Optional<Carro> carro = rep.findById(id);
+//        if (carro.isPresent()) {
+//            return Optional.of(new CarroDTO(carro.get()));
+//        } else {
+//            return null;
+//        }
     }
 
-    public Iterable<Carro> getCarrosByTipo(String tipo) {
-        return rep.findByTipo(tipo);
+    public List<CarroDTO> getCarrosByTipo(String tipo) {
+        return rep.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
     }
 
     public Carro insert(Carro carro) {
@@ -34,7 +53,7 @@ public class CarroService {
         Assert.notNull(id, "Não foi possível atualizar o registro");
 
         // Busca o carro no banco de dados
-        Optional<Carro> optional = getCarroById(id);
+        Optional<Carro> optional = rep.findById(id);
         if (optional.isPresent()) {
             Carro db = optional.get();
             // Copia as propriedades
@@ -64,8 +83,7 @@ public class CarroService {
     }
 
     public void delete(Long id) {
-        Optional<Carro> carro = getCarroById(id);
-        if (carro.isPresent()) {
+        if (getCarroById(id).isPresent()) {
             rep.deleteById(id);
         }
     }
